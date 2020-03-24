@@ -1,5 +1,5 @@
 from math import *
-from scipy.stats import f
+from scipy.stats import f, t
 import numpy as np
 from _pydecimal import Decimal
 import random as rnd
@@ -107,15 +107,15 @@ pprint.pprint(matrix)
 print("y_avg--"+str(y_avg))
 print("x_avg--"+str(x_avg))
 print("	Рівняння регресії")
-print("y = {:.2f}+{:.2f}*X1+{:.2f}*X2+{:.2f}*X3".format(b0, b1, b2, b3))
+print("y = {:.2f} + {:.2f}*X1 + {:.2f}*X2 + {:.2f}*X3".format(b0, b1, b2, b3))
 print("	Перевірка")
-print("{:.2f}+{:.2f}*{:.2f}+{:.2f}*{:.2f}+{:.2f}*{:.2f} = ".format(b0, b1, x1_min, b2, x2_min, b3, x3_min)
+print("{:.2f} + {:.2f}*{:.2f} + {:.2f}*{:.2f} + {:.2f}*{:.2f} = ".format(b0, b1, x1_min, b2, x2_min, b3, x3_min)
       + str(round(b0 + b1 * x1_min + b2 * x2_min + b3 * x3_min,2)))
-print("{:.2f}+{:.2f}*{:.2f}+{:.2f}*{:.2f}+{:.2f}*{:.2f} = ".format(b0, b1, x1_min, b2, x2_max, b3, x3_max)
+print("{:.2f} + {:.2f}*{:.2f} + {:.2f}*{:.2f} + {:.2f}*{:.2f} = ".format(b0, b1, x1_min, b2, x2_max, b3, x3_max)
       + str(round(b0 + b1 * x1_min + b2 * x2_max + b3 * x3_max,2)))
-print("{:.2f}+{:.2f}*{:.2f}+{:.2f}*{:.2f}+{:.2f}*{:.2f} = ".format(b0, b1, x1_max, b2, x2_min, b3, x3_max)
+print("{:.2f} + {:.2f}*{:.2f} + {:.2f}*{:.2f} + {:.2f}*{:.2f} = ".format(b0, b1, x1_max, b2, x2_min, b3, x3_max)
       + str(round(b0 + b1 * x1_max + b2 * x2_min + b3 * x3_max,2)))
-print("{:.2f}+{:.2f}*{:.2f}+{:.2f}*{:.2f}+{:.2f}*{:.2f} = ".format(b0, b1, x1_max, b2, x2_max, b3, x3_min)
+print("{:.2f} + {:.2f}*{:.2f} + {:.2f}*{:.2f} + {:.2f}*{:.2f} = ".format(b0, b1, x1_max, b2, x2_max, b3, x3_min)
       + str(round(b0 + b1 * x1_max + b2 * x2_max + b3 * x3_min,2)))
 # ~ Критерій Стьюдента
 print("	Критерій Стьюдента")
@@ -136,11 +136,8 @@ student_table = [12.71, 4.303, 3.182, 2.776, 2.571, 2.447, 2.365,
 				 2.131, 2.12,  2.11,  2.101, 2.093, 2.086, 2.08,
 				 2.074, 2.069, 2.064, 2.06, 2.056, 2.052,  2.048,
 				 2.045, 2.042];
-try:
-	T = student_table[f3-1]
-except:
-	T = 1.960
-print("T = "+str(T))
+T = t.ppf((1 + (1 - q)) / 2, f3)
+print("T = "+str(T)+ "\nT_list = "+str(list(map(lambda x : round(x,2),T_list))))
 for i in range(len(T_list)):
 	if T_list[i] < T :
 		T_list[i] = 0
@@ -164,34 +161,14 @@ print("{:.2f} + {:.2f}*{:.2f} + {:.2f}*{:.2f} + {:.2f}*{:.2f} = "\
  + str(round(y_4,2))+" = "+str(round(y_avg[3],2)))
 # ~ Критерій Фішера
 print("	Критерій Фішера")
-fisher_table = [[164.4, 199.5, 215.7, 224.6, 230.2, 234],
-				[18.5, 19.2, 19.2, 19.3, 19.3, 19.3],
-				[10.1, 9.6, 9.3, 9.1, 9, 8.9],
-				[7.7, 6.9, 6.6, 6.4, 6.3, 6.2], 
-				[6.6, 5.8, 5.4, 5.2, 5.1, 5],
-				[6, 5.1, 4.8, 4.5, 4.4, 4.3], 
-				[5.5, 4.7, 4.4, 4.1, 4, 3.9],
-				[5.3, 4.5, 4.1, 3.8, 3.7, 3.6],
-				[5.1, 4.3, 3.9, 3.6, 3.5, 3.4], 
-				[5, 4.1, 3.7, 3.5, 3.3, 3.2], 
-				[4.8, 4, 3.6, 3.4, 3.2, 3.1],
-				[4.8, 3.9, 3.5, 3.3, 3.1, 3],
-				[4.7, 3.8, 3.4, 3.2, 3, 2.9],
-				[4.6, 3.7, 3.3, 3.1, 3, 2.9],
-				[4.5, 3.7, 3.3, 3.1, 2.9, 2.8],
-				[4.5, 3.6, 3.2, 3, 2.9, 2.7],
-				[4.5, 3.6, 3.2, 3, 2.8, 2.7],
-				[4.4, 3.6, 3.2, 2.9, 2.8, 2.7],
-				[4.4, 3.5, 3.1, 2.9, 2.7, 2.6],
-				[4.4, 3.5, 3.1, 2.9, 2.7, 2.6]]
-
 b_list = list(filter(lambda i : (i != 0), b_list))
 d = len(b_list)
 f4 = N - d # [f3][f4]
 S2ad = m * ((y_1-y_avg[0])**2 + (y_2-y_avg[1])**2 + \
 			(y_3-y_avg[2])**2 + (y_4-y_avg[3])**2)/f4
 Fp = S2ad / S2b
-Ft = fisher_table[f3-1][f4-1]
+Ft=f.ppf(p, f4, f3)
+print('Fp = '+ str(Fp)+"\nFt = "+str(Ft))
 if Fp > Ft:
     print("	Рівняння регресії неадекватне при рівні значимості {:.2f}".format(q))
 else:
